@@ -1,0 +1,10 @@
+{
+  "name": "ZJU_Charging",
+  "version": "1.0.0",
+  "main": "subscribe.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "moment": "^2.29.4"
+  }
+}
