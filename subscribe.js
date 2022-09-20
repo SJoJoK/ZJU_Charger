@@ -1,9 +1,11 @@
 // const axios = require('axios');
 const axios = require('axios').default
 const moment = require('moment')
-const secret = require('./secret.json')
+const secret = {
+    token: process.env.token,
+    Webhook: process.env.Webhook
+}
 const config = require('./config.json')
-config = { ...config, ...secret }
 const campusLocations = {
     浙江大学玉泉校区: {
         lng: 120.12164443731308,
