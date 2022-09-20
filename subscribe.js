@@ -1,12 +1,9 @@
 // const axios = require('axios');
 const axios = require('axios').default
 const moment = require('moment')
+const secret = require('./secret.json')
 const config = require('./config.json')
-
-const beginningTime = moment('6:00am', 'h:mma')
-const endTime = moment('11:59pm', 'h:mma')
-const now = moment()
-
+config = { ...config, ...secret }
 const campusLocations = {
     浙江大学玉泉校区: {
         lng: 120.12164443731308,
