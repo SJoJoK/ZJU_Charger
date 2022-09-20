@@ -32,10 +32,8 @@ const processRes = (res) => {
     postWebhookInstance.post('', {
         "msgtype": "text",
         "text": {
-            "content": "请热心同学将学生无法使用的充电桩发送至csjk@zju.edu.cn\n空桩信息:\n" + text
+            "content": "请热心同学将学生无法使用的充电桩发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
         }
-    }).then((res) => {
-        // console.log(res.data)
     })
 
 }
@@ -75,6 +73,7 @@ const getHandler = (campus) => {
         handler(campus)
     }
 }
-
+getHandler("浙江大学玉泉校区")()
+getHandler("浙江大学紫金港校区")()
 const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
 const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
