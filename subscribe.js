@@ -10,85 +10,75 @@ const now = moment()
 const campusLocations = {
     浙江大学玉泉校区: {
         lng: 120.12164443731308,
-        lat: 30.258415072171623
+        lat: 30.258415072171623,
+        distanceLength: 2,
+        limit: 20
     },
     浙江大学紫金港校区: {
         lng: 120.082144,
-        lat: 30.295381
+        lat: 30.295381,
+        distanceLength: 4,
+        limit: 30
     }
 }
-const distanceLength = 6
-const limit = 30
 const campus = "浙江大学玉泉校区"
-const areaNames = [
-    '信电学院 原行政楼',
-    '信电学院原行政楼A',
-    '玉泉教三（光电）',
-    '教二（电气）',
-    '玉泉内单',
-    '电机工程楼',
-    '商贸（永谦活动中心对面）',
-    '玉泉科工楼',
-    '清真食堂',
-    '尼普顿--玉泉',
-    '玉泉热能所（原出版社楼）',
-    '玉泉一食堂',
-    '玉泉教六',
-    '精工机械',
-    '教十八',
-    '生仪学院A区',
-    '生仪学院B区',
-    '玉泉-四食堂',
-    '玉泉 教七',
-    '玉泉硅材料',
-    '玉泉 教十',
-    '玉泉教八（化学系）',
-    '玉泉物业宿舍',
-    '员工宿舍A（教7后）',
-    '玉泉 高分子A',
-    '玉泉 高分子B',
-    '铸工楼',
-    '液压',
-    '玉泉曹光彪A',
-    '玉泉曹光彪B',
-    '玉泉水电中心',
-    '逸夫工商管理楼（数学系）',
-    '玉泉水电中心',
-    '建发宿舍',
-    '信电系',
-    '电气学院原电工厂',
-    '31舍北',
-    '玉泉石虎山',
-    '西溪西七教学楼',
-    '浙大西溪物业'
-]
-const processRes = () => {
-        let text = ""
-        if (res.data.code == 5001) {
-            text = "token已过期，请联系管理员"
+
+const processRes = (res) => {
+    let text = ""
+    if (res.data.code == 5001) {
+        text = "token已过期，请联系管理员"
+    }
+    else {
+        text = processList(res.data.data)
+            .sort((a, b) => (b.totalFreeNumber - a.totalFreeNumber))
+            .map((info, index) => (info.areaName + ':' + info.totalFreeNumber + '\n')).toString().replaceAll(',', '')
+    }
+    postWebhookInstance.post('', {
+        "msgtype": "text",
+        "text": {
+            "content": "请热心同学将学生无法使用的充电桩发送至csjk@zju.edu.cn\n空桩信息:\n" + text
         }
-        else {
-            processList(res.data.data, campus)
-        }
+    }).then((res) => {
+        // console.log(res.data)
+    })
+
 }
 const processList = (list = []) => {
     const freeAreas = list.filter((info, index) => info.totalFreeNumber > 0 && config.blocks.indexOf(info.areaName) < 0)
-                            .map((info, index) => ({ areaName: info.areaName, totalFreeNumber:info.totalFreeNumber}))
-    console.log(freeAreas)
+        .map((info, index) => ({ areaName: info.areaName, totalFreeNumber: info.totalFreeNumber }))
+    return freeAreas
 }
-const reqInstance = axios.create({
+const reqChargerInstance = axios.create({
     baseURL: 'https://gateway.hzxwwl.com/api/charging/pile/listCircleChargingArea',
     headers: {
         "REQ-NPD-TOKEN": config.token
     },
     params: {
         ...campusLocations["浙江大学玉泉校区"],
-        distanceLength,
-        limit
     },
 })
-const handler = (campus) => {
-    reqInstance.get().then(processRes(campus))
+const postWebhookInstance = axios.create({
+    baseURL: config.Webhook,
+    headers: {
+        "Content-Type": "application/json ;charset=utf-8"
+    }
+})
+const reqCampus = (campus) => {
+    return reqChargerInstance.get('', {
+        params: {
+            ...campusLocations[campus]
+        }
+
+    })
 }
-reqInstance.get().then(processRes(campus))
-// const interval = setInterval(() => { console.log(1) },config.period*1000)
+const handler = (campus) => {
+    reqCampus(campus).then(processRes)
+}
+const getHandler = (campus) => {
+    return () => {
+        handler(campus)
+    }
+}
+
+const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
+const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
