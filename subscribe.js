@@ -7,8 +7,8 @@ const campusLocations = {
     浙江大学玉泉校区: {
         lng: 120.12164443731308,
         lat: 30.258415072171623,
-        distanceLength: 4,
-        limit: 30
+        distanceLength: 3,
+        limit: 50
     },
     浙江大学紫金港校区: {
         lng: 120.082144,
@@ -21,6 +21,10 @@ const campus = "浙江大学玉泉校区"
 
 const processRes = (res) => {
     let text = ""
+    const date = new Date()
+    if(date >= date.setHours(0,0) && date <= date.setHours(6,0)){
+        return
+    }
     if (res.data.code == 5001) {
         text = "token已过期，请联系管理员"
     }
