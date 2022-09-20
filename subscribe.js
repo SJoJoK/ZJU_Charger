@@ -3,7 +3,6 @@ const axios = require('axios').default
 const moment = require('moment')
 const secret = require('./secret.json')
 const config = require('./config.json')
-config = { ...config, ...secret }
 const campusLocations = {
     浙江大学玉泉校区: {
         lng: 120.12164443731308,
@@ -48,14 +47,14 @@ const processList = (list = []) => {
 const reqChargerInstance = axios.create({
     baseURL: 'https://gateway.hzxwwl.com/api/charging/pile/listCircleChargingArea',
     headers: {
-        "REQ-NPD-TOKEN": config.token
+        "REQ-NPD-TOKEN": secret.token
     },
     params: {
         ...campusLocations["浙江大学玉泉校区"],
     },
 })
 const postWebhookInstance = axios.create({
-    baseURL: config.Webhook,
+    baseURL: secret.Webhook,
     headers: {
         "Content-Type": "application/json ;charset=utf-8"
     }
