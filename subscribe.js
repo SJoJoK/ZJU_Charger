@@ -3,22 +3,7 @@ const axios = require('axios').default
 const moment = require('moment')
 const secret = require('./secret.json')
 const config = require('./config.json')
-const campusLocations = {
-    浙江大学玉泉校区: {
-        lng: 120.12164443731308,
-        lat: 30.258415072171623,
-        distanceLength: 4,
-        limit: 30
-    },
-    浙江大学紫金港校区: {
-        lng: 120.082144,
-        lat: 30.295381,
-        distanceLength: 4,
-        limit: 30
-    }
-}
-const campus = "浙江大学玉泉校区"
-
+const campusLocations = config.campusLocations
 const processRes = (res) => {
     let text = ""
     if (res.data.code == 5001) {
@@ -69,9 +54,17 @@ const handler = (campus) => {
     reqCampus(campus).then(processRes)
 }
 const getHandler = (campus) => {
-    return () => {
-        handler(campus)
+    let currentTime = moment();
+    let beginningTime = moment('6:00am', 'h:mma');
+    let endTime = moment('11:59pm', 'h:mma');
+    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime))
+    {
+        return () => {
+            handler(campus)
+        }
     }
+    return () => { }
+
 }
 getHandler("浙江大学玉泉校区")()
 getHandler("浙江大学紫金港校区")()
