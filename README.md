@@ -7,11 +7,11 @@
 
 使用Node.js内置的Yarn
 
-下载项目
+## 下载项目
 
 `git clone https://github.com/SJoJoK/ZJU_Charger.git`
 
-创建私密文件secret.json，例：
+## 创建私密文件secret.json，例：
 
 ```json
 {
@@ -27,7 +27,7 @@
 
 目前token只能通过手动抓包获取（没找到登陆页面），测试有效时长为24h
 
-修改配置文件config.json，例：
+## 修改配置文件config.json，例：
 
 ```json
 {
@@ -63,10 +63,10 @@
 }
 ```
 
-安装相关依赖包
+## 安装相关依赖包
 
 `yarn`
 
-运行脚本
+## 运行脚本
 
 `node subscribe.js`
