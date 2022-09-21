@@ -55,5 +55,5 @@ const getHandler = (campus) => {
         handler(campus)
     }
 }
-// getHandler("浙江大学玉泉校区")()
-getHandler("浙江大学紫金港校区")()
+getHandler("浙江大学玉泉校区")()
+// getHandler("浙江大学紫金港校区")()
