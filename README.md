@@ -11,7 +11,7 @@
 
 `git clone https://github.com/SJoJoK/ZJU_Charger.git`
 
-创建私密文件secret.js，例：
+创建私密文件secret.json，例：
 
 ```json
 {
@@ -24,6 +24,8 @@
     "admin":"群管理员手机号"
 }
 ```
+
+目前token只能通过手动抓包获取（没找到登陆页面），测试有效时长为24h
 
 修改配置文件config.json，例：
 
@@ -49,7 +51,7 @@
             "lat": 30.30967,
             "distanceLength": 4,
             "limit": 50
-        }，
+        },
         "自定义校区":{
             "lng": "经度",
             "lat": "维度",
