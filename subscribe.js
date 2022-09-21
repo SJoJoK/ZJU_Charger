@@ -73,10 +73,14 @@ const getPostWebhookInstance = (webhook) => {
 }
 
 postWebhookInstances.浙江大学玉泉校区 = []
-postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("testWebhook"))
+// postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("Webhook"))
+// postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("Webhook2"))
+postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("YQWebhook"))
     
 postWebhookInstances.浙江大学紫金港校区 = []
-postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("testWebhook"))
+// postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("Webhook"))
+// postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("Webhook2"))
+postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("ZJGWebhook"))
 
 const reqCampus = (campus) => {
     return reqChargerInstance.get('', {
