@@ -4,7 +4,6 @@ const moment = require('moment')
 const secret = require('./secret.json')
 const config = require('./config.json')
 const campusLocations = config.campusLocations
-
 const processRes = (res) => {
     let text = ""
     if (res.data.code == 5001) {
@@ -18,7 +17,7 @@ const processRes = (res) => {
     postWebhookInstance.post('', {
         "msgtype": "text",
         "text": {
-            "content": "请热心同学将学生无法使用的充电桩发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
+            "content": "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
         }
     })
 
@@ -55,9 +54,17 @@ const handler = (campus) => {
     reqCampus(campus).then(processRes)
 }
 const getHandler = (campus) => {
-    return () => {
-        handler(campus)
+    let currentTime = moment();
+    let beginningTime = moment('6:00am', 'h:mma');
+    let endTime = moment('11:59pm', 'h:mma');
+    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime))
+    {
+        return () => {
+            handler(campus)
+        }
     }
+    return () => { }
+
 }
 getHandler("浙江大学玉泉校区")()
 getHandler("浙江大学紫金港校区")()

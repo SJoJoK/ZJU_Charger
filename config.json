@@ -8,8 +8,8 @@
     "period": 60,
     "campusLocations": {
         "浙江大学玉泉校区": {
-            "lng": 120.12816,
-            "lat": 30.26570,
+            "lng": 120.12742,
+            "lat": 30.26587,
             "distanceLength": 2,
             "limit": 30
         },
