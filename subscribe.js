@@ -3,20 +3,7 @@ const axios = require('axios').default
 const moment = require('moment')
 const secret = require('./secret.json')
 const config = require('./config.json')
-const campusLocations = {
-    浙江大学玉泉校区: {
-        lng: 120.12839,
-        lat: 30.26511,
-        distanceLength: 2,
-        limit: 30
-    },
-    浙江大学紫金港校区: {
-        lng: 120.12086,
-        lat: 30.31200,
-        distanceLength: 4,
-        limit: 30
-    }
-}
+const campusLocations = config.campusLocations
 
 const processRes = (res) => {
     console.log(res.data.data)
