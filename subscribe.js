@@ -90,10 +90,9 @@ const reqCampus = (campus) => {
 }
 
 const handler = (campus) => {
-    let currentTime = moment().utc();
-    let beginningTime = moment().utc().startOf('d').subtract(2, 'h')
-    let endTime = moment().utc().startOf('d').add(16, 'h')
-    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime) && token) {
+    const currentTime = moment().utc().add(8,'h')
+    const beginningTime = moment().utc().add(8, 'h').startOf('d').add(6, 'h')
+    if (currentTime.isAfter(beginningTime) && token) {
         reqCampus(campus).then(getResProcess(campus))
     }
 }
