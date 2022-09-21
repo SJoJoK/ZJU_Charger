@@ -11,13 +11,13 @@
             "lng": 120.12742,
             "lat": 30.26587,
             "distanceLength": 2,
-            "limit": 30
+            "limit": 50
         },
         "浙江大学紫金港校区": {
             "lng": 120.08820,
             "lat": 30.30967,
             "distanceLength": 4,
-            "limit": 30
+            "limit": 50
         }
     },
     "test":false

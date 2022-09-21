@@ -4,13 +4,24 @@ const moment = require('moment')
 const secret = require('./secret.json')
 const config = require('./config.json')
 const campusLocations = config.campusLocations
-var token=true
+var token = true
 const processRes = (res) => {
     const prefix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息(" + moment().utc().add(8, 'h').format("HH:mm") + "):\n"
     if (res.data.code == 5001) {
-        token=false
+        token = false
         text = "token已过期，请联系管理员"
         postWebhookInstance.post('', {
+            "msgtype": "text",
+            "text": {
+                "content": prefix + text
+            },
+            "at": {
+                "atMobiles": [
+                    secret.admin
+                ]
+            },
+        })
+        postWebhookInstance2.post('', {
             "msgtype": "text",
             "text": {
                 "content": prefix + text
@@ -32,8 +43,15 @@ const processRes = (res) => {
                 "content": prefix + text
             }
         })
+        postWebhookInstance2.post('', {
+            "msgtype": "text",
+            "text": {
+                "content": prefix + text
+            }
+        })
+
     }
-    
+
 
 }
 const processList = (list = []) => {
@@ -51,11 +69,19 @@ const reqChargerInstance = axios.create({
     },
 })
 const postWebhookInstance = axios.create({
-    baseURL: config.test?secret.testWebhook:secret.Webhook,
+    baseURL: config.test ? secret.testWebhook : secret.Webhook,
     headers: {
         "Content-Type": "application/json ;charset=utf-8"
     }
 })
+
+const postWebhookInstance2 = axios.create({
+    baseURL: config.test ? secret.testWebhook : secret.Webhook2,
+    headers: {
+        "Content-Type": "application/json ;charset=utf-8"
+    }
+})
+
 const reqCampus = (campus) => {
     return reqChargerInstance.get('', {
         params: {
@@ -71,8 +97,7 @@ const getHandler = (campus) => {
     let currentTime = moment().utc();
     let beginningTime = moment().utc().startOf('d').subtract(2, 'h')
     let endTime = moment().utc().startOf('d').add(16, 'h')
-    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime)&&token)
-    {
+    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime) && token) {
         return () => {
             handler(campus)
         }
