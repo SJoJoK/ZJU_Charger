@@ -6,7 +6,6 @@ const config = require('./config.json')
 const campusLocations = config.campusLocations
 
 const processRes = (res) => {
-    console.log(res.data.data)
     let text = ""
     if (res.data.code == 5001) {
         text = "token已过期，请联系管理员"
@@ -16,7 +15,6 @@ const processRes = (res) => {
             .sort((a, b) => (b.totalFreeNumber - a.totalFreeNumber))
             .map((info, index) => (info.areaName + ':' + info.totalFreeNumber + '\n')).toString().replaceAll(',', '')
     }
-    console.log(text)
 
 }
 const processList = (list = []) => {
@@ -56,4 +54,4 @@ const getHandler = (campus) => {
     }
 }
 getHandler("浙江大学玉泉校区")()
-// getHandler("浙江大学紫金港校区")()
+getHandler("浙江大学紫金港校区")()
