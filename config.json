@@ -5,5 +5,19 @@
         "玉泉物业宿舍",
         "尼普顿--玉泉"
     ],
-    "period": 60
+    "period": 60,
+    "campusLocations": {
+        "浙江大学玉泉校区": {
+            "lng": 120.12742,
+            "lat": 30.26587,
+            "distanceLength": 2,
+            "limit": 30
+        },
+        "浙江大学紫金港校区": {
+            "lng": 120.08820,
+            "lat": 30.30967,
+            "distanceLength": 4,
+            "limit": 30
+        }
+    }
 }

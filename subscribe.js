@@ -6,22 +6,7 @@ const secret = {
     Webhook: process.env.Webhook
 }
 const config = require('./config.json')
-const campusLocations = {
-    浙江大学玉泉校区: {
-        lng: 120.12164443731308,
-        lat: 30.258415072171623,
-        distanceLength: 2,
-        limit: 20
-    },
-    浙江大学紫金港校区: {
-        lng: 120.082144,
-        lat: 30.295381,
-        distanceLength: 4,
-        limit: 30
-    }
-}
-const campus = "浙江大学玉泉校区"
-
+const campusLocations = config.campusLocations
 const processRes = (res) => {
     let text = ""
     if (res.data.code == 5001) {
@@ -35,10 +20,8 @@ const processRes = (res) => {
     postWebhookInstance.post('', {
         "msgtype": "text",
         "text": {
-            "content": "请热心同学将学生无法使用的充电桩发送至csjk@zju.edu.cn\n空桩信息:\n" + text
+            "content": "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
         }
-    }).then((res) => {
-        // console.log(res.data)
     })
 
 }
@@ -74,10 +57,19 @@ const handler = (campus) => {
     reqCampus(campus).then(processRes)
 }
 const getHandler = (campus) => {
-    return () => {
-        handler(campus)
+    let currentTime = moment();
+    let beginningTime = moment('6:00am', 'h:mma');
+    let endTime = moment('11:59pm', 'h:mma');
+    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime))
+    {
+        return () => {
+            handler(campus)
+        }
     }
-}
+    return () => { }
 
+}
+getHandler("浙江大学玉泉校区")()
+getHandler("浙江大学紫金港校区")()
 const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
 const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
