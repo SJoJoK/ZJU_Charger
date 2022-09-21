@@ -17,7 +17,7 @@ const processRes = (res) => {
     postWebhookInstance.post('', {
         "msgtype": "text",
         "text": {
-            "content": "请热心同学将学生无法使用的充电桩发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
+            "content": "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
         }
     })
 
