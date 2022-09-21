@@ -15,13 +15,13 @@
 
 ```json
 {
-    "token": //访问充电桩API的token,
-    "Webhook": //不同群机器人的Webhook,下同,
-    "Webhook2": //不同群机器人的Webhook,下同,
-    "testWebhook"://不同群机器人的Webhook,下同,
-    "YQWebhook"://不同群机器人的Webhook,下同,
-    "ZJGWebhook"://不同群机器人的Webhook,下同,
-    "admin"://群管理员手机号
+    "token": "访问充电桩API的token",
+    "Webhook": "不同群机器人的Webhook,下同",
+    "Webhook2": "不同群机器人的Webhook,下同",
+    "testWebhook":"不同群机器人的Webhook,下同",
+    "YQWebhook":"不同群机器人的Webhook,下同",
+    "ZJGWebhook":"不同群机器人的Webhook,下同",
+    "admin":"群管理员手机号"
 }
 ```
 
@@ -33,9 +33,10 @@
         "员工宿舍A（教7后）",
         "清真食堂",
         "玉泉物业宿舍",
-        "尼普顿--玉泉"
-    ],//（被屏蔽的充电区域）
-    "period": 60,//（机器人更新频率，单位位秒）
+        "尼普顿--玉泉",
+        "被屏蔽的充电区域"
+    ],
+    "period": "数字类型，机器人发信频率，单位为秒",
     "campusLocations": {
         "浙江大学玉泉校区": {
             "lng": 120.12742,
@@ -48,9 +49,15 @@
             "lat": 30.30967,
             "distanceLength": 4,
             "limit": 50
+        }，
+        "自定义校区":{
+            "lng": "经度",
+            "lat": "维度",
+            "distanceLength": "查询半径",
+            "limit": "查询数量上限"
         }
-    },//（校区位置，同字面意义）
-    "test":false//（是否为测试模式）
+    },
+    "test":"布尔类型，是否是测试模式"
 }
 ```
 
