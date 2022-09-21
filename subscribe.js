@@ -40,7 +40,6 @@ const getResProcess = (campus) => {
                 })
             })
         }
-
     }
 }
 
@@ -76,7 +75,7 @@ postWebhookInstances.浙江大学玉泉校区 = []
 postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("Webhook"))
 postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("Webhook2"))
 postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("YQWebhook"))
-    
+
 postWebhookInstances.浙江大学紫金港校区 = []
 postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("Webhook"))
 postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("Webhook2"))
@@ -87,24 +86,23 @@ const reqCampus = (campus) => {
         params: {
             ...campusLocations[campus]
         }
-
     })
 }
 
 const handler = (campus) => {
-    reqCampus(campus).then(getResProcess(campus))
-}
-
-const getHandler = (campus) => {
     let currentTime = moment().utc();
     let beginningTime = moment().utc().startOf('d').subtract(2, 'h')
     let endTime = moment().utc().startOf('d').add(16, 'h')
     if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime) && token) {
-        return () => {
-            handler(campus)
-        }
+        reqCampus(campus).then(getResProcess(campus))
     }
-    return () => { }
+}
+
+const getHandler = (campus) => {
+
+    return () => {
+        handler(campus)
+    }
 
 }
 getHandler("浙江大学玉泉校区")()
