@@ -19,5 +19,6 @@
             "distanceLength": 4,
             "limit": 30
         }
-    }
+    },
+    "test":true
 }

@@ -4,22 +4,36 @@ const moment = require('moment')
 const secret = require('./secret.json')
 const config = require('./config.json')
 const campusLocations = config.campusLocations
+var token=true
 const processRes = (res) => {
-    let text = ""
+    const prefix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息(" + moment().utc().add(8, 'h').format("HH:mm") + "):\n"
     if (res.data.code == 5001) {
+        token=false
         text = "token已过期，请联系管理员"
+        postWebhookInstance.post('', {
+            "msgtype": "text",
+            "text": {
+                "content": prefix + text
+            },
+            "at": {
+                "atMobiles": [
+                    secret.admin
+                ]
+            },
+        })
     }
     else {
         text = processList(res.data.data)
             .sort((a, b) => (b.totalFreeNumber - a.totalFreeNumber))
             .map((info, index) => (info.areaName + ':' + info.totalFreeNumber + '\n')).toString().replaceAll(',', '')
+        postWebhookInstance.post('', {
+            "msgtype": "text",
+            "text": {
+                "content": prefix + text
+            }
+        })
     }
-    postWebhookInstance.post('', {
-        "msgtype": "text",
-        "text": {
-            "content": "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息（每分钟更新一次）:\n" + text
-        }
-    })
+    
 
 }
 const processList = (list = []) => {
@@ -37,7 +51,7 @@ const reqChargerInstance = axios.create({
     },
 })
 const postWebhookInstance = axios.create({
-    baseURL: secret.Webhook,
+    baseURL: config.test?secret.testWebhook:secret.Webhook,
     headers: {
         "Content-Type": "application/json ;charset=utf-8"
     }
@@ -54,10 +68,10 @@ const handler = (campus) => {
     reqCampus(campus).then(processRes)
 }
 const getHandler = (campus) => {
-    let currentTime = moment();
-    let beginningTime = moment('6:00am', 'h:mma');
-    let endTime = moment('11:59pm', 'h:mma');
-    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime))
+    let currentTime = moment().utc();
+    let beginningTime = moment().utc().startOf('d').subtract(2, 'h')
+    let endTime = moment().utc().startOf('d').add(16, 'h')
+    if (currentTime.isBefore(endTime) && currentTime.isAfter(beginningTime)&&token)
     {
         return () => {
             handler(campus)
