@@ -1,23 +1,32 @@
 // const axios = require('axios');
 const axios = require('axios').default
 const moment = require('moment')
+
 const secret = require('./secret.json')
 const config = require('./config.json')
+
 const campusLocations = config.campusLocations
 const postWebhookInstances = {}
 
-var token = true
+const webhookForYQ = ["Webhook", "Webhook2", "YQWebhook"]
+const webhookForZJG = ["Webhook", "Webhook2", "ZJGWebhook"]
+
+var token = ''
+var hasToken = true
+
 const getResProcess = (campus) => {
+    const prefix = "空桩信息:\n"
+    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn"
     return (res) => {
-        const prefix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n空桩信息(" + moment().utc().add(8, 'h').format("HH:mm") + "):\n"
+        const resTime = "(查询时间:" + moment(res.headers.date).utc().add(8, 'h').format("HH:mm:ss") + ")\n"
         if (res.data.code == 5001) {
-            token = false
+            hasToken = false
             text = "token已过期，请联系管理员"
             postWebhookInstances[campus].forEach((instance) => {
                 instance.post('', {
                     "msgtype": "text",
                     "text": {
-                        "content": prefix + text
+                        "content": prefix + resTime + text + postfix
                     },
                     "at": {
                         "atMobiles": [
@@ -35,7 +44,7 @@ const getResProcess = (campus) => {
                 instance.post('', {
                     "msgtype": "text",
                     "text": {
-                        "content": prefix + text
+                        "content": prefix + resTime + text + postfix
                     }
                 })
             })
@@ -54,9 +63,6 @@ const getListProcess = (campus) => {
 
 const reqChargerInstance = axios.create({
     baseURL: 'https://gateway.hzxwwl.com/api/charging/pile/listCircleChargingArea',
-    headers: {
-        "REQ-NPD-TOKEN": secret.token
-    },
     params: {
         ...campusLocations["浙江大学玉泉校区"],
     },
@@ -66,7 +72,7 @@ const reqTokenInstance = axios.create({
     baseURL: 'https://gateway.hzxwwl.com/api/auth/wx/mp',
     params: {
         openid: secret.openid,
-        unionid:secret.unionid
+        unionid: secret.unionid
     }
 })
 
@@ -79,18 +85,15 @@ const getPostWebhookInstance = (webhook) => {
     })
 }
 
-postWebhookInstances.浙江大学玉泉校区 = []
-postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("Webhook"))
-postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("Webhook2"))
-postWebhookInstances.浙江大学玉泉校区.push(getPostWebhookInstance("YQWebhook"))
+postWebhookInstances.浙江大学玉泉校区 = webhookForYQ.map(webhook => getPostWebhookInstance(webhook))
 
-postWebhookInstances.浙江大学紫金港校区 = []
-postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("Webhook"))
-postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("Webhook2"))
-postWebhookInstances.浙江大学紫金港校区.push(getPostWebhookInstance("ZJGWebhook"))
+postWebhookInstances.浙江大学紫金港校区 = webhookForZJG.map(webhook => getPostWebhookInstance(webhook))
 
-const reqCampus = (campus) => {
+const reqCampus = (campus, token) => {
     return reqChargerInstance.get('', {
+        headers: {
+            "REQ-NPD-TOKEN": token
+        },
         params: {
             ...campusLocations[campus]
         }
@@ -98,21 +101,22 @@ const reqCampus = (campus) => {
 }
 
 const handler = (campus) => {
-    const currentTime = moment().utc().add(8,'h')
+    const currentTime = moment().utc().add(8, 'h')
     const beginningTime = moment().utc().add(8, 'h').startOf('d').add(6, 'h')
-    if (currentTime.isAfter(beginningTime) && token) {
-        reqCampus(campus).then(getResProcess(campus))
+    if (currentTime.isAfter(beginningTime)) {
+        reqTokenInstance.get().then(res => {
+            reqCampus(campus,res.data.data.token).then(getResProcess(campus))
+        })  
     }
 }
 
 const getHandler = (campus) => {
-
     return () => {
         handler(campus)
     }
-
 }
+
 getHandler("浙江大学玉泉校区")()
-getHandler("浙江大学紫金港校区")()
-const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
-const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
+// getHandler("浙江大学紫金港校区")()
+// const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
+// const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
