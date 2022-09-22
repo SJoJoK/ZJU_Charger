@@ -17,8 +17,8 @@ var tmpToken = ''
 var hasToken = true
 
 const getResProcess = (campus) => {
-    const prefix = "因文本格式改变，建议大家通过群公告前往新群获得更好体验\n空桩信息:\n"
-    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n因文本格式改变，建议大家通过群公告前往新群获得更好体验\n"
+    const prefix = "因文本格式改变，建议大家通过群公告前往分群获得更好体验\n空桩信息:\n"
+    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n因文本格式改变，建议大家通过群公告前往分群获得更好体验\n"
     return async (res) => {
         const resTime = "(查询时间:" + moment(res.headers.date).utc().add(8, 'h').format("HH:mm:ss") + ")\n"
         if (res.data.code == 5001) {
