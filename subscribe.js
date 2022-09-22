@@ -11,12 +11,14 @@ const postWebhookInstances = {}
 const webhookForYQ = ["Webhook", "Webhook2", "YQWebhook"]
 const webhookForZJG = ["Webhook", "Webhook2", "ZJGWebhook"]
 
+const maxFreePiles = 7
+
 var tmpToken = ''
 var hasToken = true
 
 const getResProcess = (campus) => {
-    const prefix = "空桩信息:\n"
-    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn"
+    const prefix = "因文本格式改变，建议大家通过群公告前往新群获得更好体验\n空桩信息:\n"
+    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n因文本格式改变，建议大家通过群公告前往新群获得更好体验\n"
     return async (res) => {
         const resTime = "(查询时间:" + moment(res.headers.date).utc().add(8, 'h').format("HH:mm:ss") + ")\n"
         if (res.data.code == 5001) {
@@ -25,17 +27,14 @@ const getResProcess = (campus) => {
         }
         else {
             const areaInfos = await Promise.all(getListProcess(campus)(res.data.data).sort((a, b) => (b.totalFreeNumber - a.totalFreeNumber)).map(async info =>
-                info.totalFreeNumber >= 4 ? info :
+                info.totalFreeNumber > maxFreePiles ? info :
                     {
                         ...info,
-                        freePiles: await getReqChargerInstance(info.id).get().then(res => res.data.data.chargingPileList.filter(chargerInfo => chargerInfo.status == 0).map(chargerInfo => chargerInfo.pileNumber))
+                        freePiles: await getReqChargerInstance(info.id).get().then(res => res.data.data.chargingPileList.filter(chargerInfo => chargerInfo.status == 0).map(chargerInfo => chargerInfo.pileNumber).sort((a, b) => a - b))
                     }
             ))
-            oldtext = areaInfos.map((info, index) => (info.areaName + ':' + info.totalFreeNumber + '\n'))
-                .toString()
-                .replaceAll(',', '')
-            text = areaInfos.map(info => info.totalFreeNumber >= 4 ? info.areaName + ': ' + info.totalFreeNumber + '个\n' :
-                info.areaName + ': ' + info.freePiles.map((id,idx)=>idx==0?id:'、'+id)+'号\n')
+            text = areaInfos.map(info => info.totalFreeNumber > maxFreePiles ? info.areaName + ':\n' + info.totalFreeNumber + '个\n' :
+                info.areaName + ':\n' + info.freePiles.map((id,idx)=>idx==0?id:'、'+id)+'号\n')
                 .toString().replaceAll(',', '')
         }
         postWebhookInstances[campus].forEach((instance) => {
@@ -123,7 +122,7 @@ postWebhookInstances.浙江大学玉泉校区 = webhookForYQ.map(webhook => getP
 
 postWebhookInstances.浙江大学紫金港校区 = webhookForZJG.map(webhook => getPostWebhookInstance(webhook))
 
-// getHandler("浙江大学玉泉校区")()
+getHandler("浙江大学玉泉校区")()
 getHandler("浙江大学紫金港校区")()
 // const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
 // const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
