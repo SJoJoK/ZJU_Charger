@@ -62,6 +62,14 @@ const reqChargerInstance = axios.create({
     },
 })
 
+const reqTokenInstance = axios.create({
+    baseURL: 'https://gateway.hzxwwl.com/api/auth/wx/mp',
+    params: {
+        openid: secret.openid,
+        unionid:secret.unionid
+    }
+})
+
 const getPostWebhookInstance = (webhook) => {
     return axios.create({
         baseURL: config.test ? secret.testWebhook : secret[webhook],

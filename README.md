@@ -21,11 +21,13 @@
     "testWebhook":"不同群机器人的Webhook,下同",
     "YQWebhook":"不同群机器人的Webhook,下同",
     "ZJGWebhook":"不同群机器人的Webhook,下同",
-    "admin":"群管理员手机号"
+    "admin":"群管理员手机号",
+    "openid":"微信openid",
+    "unionid":"微信unionid"
 }
 ```
 
-目前token只能通过手动抓包获取（没找到登陆页面），测试有效时长为24h
+openid、unionid永久有效，token可自动获取，token测试有效时长为24h
 
 ## 修改配置文件config.json，例：
 
