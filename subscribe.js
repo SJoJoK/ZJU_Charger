@@ -105,8 +105,8 @@ const handler = (campus) => {
     const beginningTime = moment().utc().add(8, 'h').startOf('d').add(6, 'h')
     if (currentTime.isAfter(beginningTime)) {
         reqTokenInstance.get().then(res => {
-            reqCampus(campus,res.data.data.token).then(getResProcess(campus))
-        })  
+            reqCampus(campus, res.data.data.token).then(getResProcess(campus))
+        })
     }
 }
 
@@ -117,6 +117,6 @@ const getHandler = (campus) => {
 }
 
 getHandler("浙江大学玉泉校区")()
-// getHandler("浙江大学紫金港校区")()
-// const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
-// const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
+getHandler("浙江大学紫金港校区")()
+const intervalYQ = setInterval(getHandler("浙江大学玉泉校区"), config.period * 1000)
+const intervalZJG = setInterval(getHandler("浙江大学紫金港校区"), config.period * 1000)
