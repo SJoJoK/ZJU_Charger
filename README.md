@@ -9,9 +9,10 @@
 
 ## 下载项目
 
-`git clone https://github.com/SJoJoK/ZJU_Charger.git`
-
-`cd ZJU_Charger`
+```
+git clone https://github.com/SJoJoK/ZJU_Charger.git
+cd ZJU_Charger
+```
 
 
 ## 创建私密文件secret.json，例：
