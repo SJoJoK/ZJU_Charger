@@ -11,6 +11,9 @@
 
 `git clone https://github.com/SJoJoK/ZJU_Charger.git`
 
+`cd ZJU_Charger`
+
+
 ## 创建私密文件secret.json，例：
 
 ```json
