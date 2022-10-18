@@ -17,8 +17,8 @@ var tmpToken = ''
 var hasToken = true
 
 const getResProcess = (campus) => {
-    const prefix = "紫金港2群见群公告\n空桩信息:\n"
-    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n紫金港2群见群公告\n"
+    const prefix = "机器人有问题联系群主\n空桩信息:\n"
+    const postfix = "请热心同学将教职工专属充电区域发送至csjk@zju.edu.cn\n"
     return async (res) => {
         const resTime = "(查询时间:" + moment(res.headers.date).utc().add(8, 'h').format("HH:mm:ss") + ")\n"
         if (res.data.code == 5001) {
